@@ -9,7 +9,7 @@ import java.nio.file.Paths
 /**
  * Created by gschool on 6/9/16.
  */
-class GradesTest extends groovy.util.GroovyTestCase {
+class GradesTest extends GroovyTestCase {
 
     void testDifferences() {
         println new Grades([6, 3, 5, 4, 3, 4, 4, 5] as Number[]).differences()
@@ -53,6 +53,7 @@ class GradesTest extends groovy.util.GroovyTestCase {
     void testNumInDecline(){
         JSONParser parser = new JSONParser();
         URL url = Thread.currentThread().getContextClassLoader().getResource("grades.json");
+        println url;
         String file = Files.readAllLines(Paths.get(url.getPath()));
         try {
             Object obj = parser.parse(file);

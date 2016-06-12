@@ -1,4 +1,4 @@
-group 'com.sethlytton.grading'
+group 'com.sethlytton.java-algorithms'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
@@ -16,5 +16,4 @@ dependencies {
     compile 'com.googlecode.json-simple:json-simple:1.1.1'
     // http://mvnrepository.com/artifact/org.spockframework/spock-core
     compile group: 'org.spockframework', name: 'spock-core', version: '1.0-groovy-2.4'
-
 }

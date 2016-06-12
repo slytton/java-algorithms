@@ -17,32 +17,36 @@ public class RoundRobin {
     }
 
     public int[][][] generateCompetition(){
-
-        int[] teams = this.teams;
         if(this.teams.length == 0) return new int[0][0][0];
-        int[][][] toFill = new int[teams.length - 1][this.halfTeamsLength][2];
-        int j = 0;
-        int k = 0;
-        for (int i = 0; i < toFill.length; i++){
-            int[][] round = toFill[i];
-            for(j = 0; j < round.length; j++){
-                int[] pairing = round[j];
-                pairing[0] = teams[j];
-                pairing[1] = teams[teams.length - (1+j)];
-            }
-            teams = roundRobinShift(teams);
-        }
-        return toFill;
+        return fillCompetition(this.teams, new int[this.teams.length - 1][this.halfTeamsLength][2], 0);
     }
 
-    private int[] roundRobinShift(int[] teams){
+    private int[][][] fillCompetition(int[] teams, int[][][] toFill, int index) {
+        fillRound(teams, toFill[index]);
+        return (index < toFill.length - 1) ? fillCompetition(roundRobinShift(teams), toFill, ++index) : toFill;
+    }
 
-        int[] shiftedTeams = new int[teams.length];
-        shiftedTeams[0] = teams[0];
-        shiftedTeams[1] = teams[teams.length - 1];
-        for(int i = 2; i < teams.length; i++){
-            shiftedTeams[i] = teams[i - 1];
-        }
-        return shiftedTeams;
+    private void fillRound(int[] teams, int[][]round){
+        createPairs(teams, round, 0);
+    }
+
+    private void createPairs(int[] teams, int[][]round, int index) {
+        round[index][0] = teams[index];
+        round[index][1] = teams[teams.length - (1+index)];
+        if(index < round.length - 1) createPairs(teams, round, ++index);
+    }
+
+    private int[] roundRobinShift( int[] teams){
+        int[] result  = new int[teams.length];
+        result[0] = teams[0];
+        result[1] = teams[teams.length - 1];
+        shift(teams, 2, result);
+        return result;
+    }
+
+    private int[] shift(int[] teams, int index, int[] result){
+        result[index] = teams[index - 1];
+        if(index + 1 < teams.length) shift(teams, ++index, result);
+        return result;
     }
 }

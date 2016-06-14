@@ -12,7 +12,6 @@ import java.nio.file.Paths
 class GradesTest extends GroovyTestCase {
 
     void testDifferences() {
-        println new Grades([6, 3, 5, 4, 3, 4, 4, 5] as Number[]).differences()
         assertTrue "differences should return an array with up, down and even.",
                 Arrays.equals( new Grades([6, 3, 5, 4, 3, 4, 4, 5] as Number[]).differences(), ["down", "up", "down", "down", "up", "even", "up"] as String[])
         assertTrue "differences returns an empty array when given an empty array",

@@ -2,6 +2,7 @@ package com.galvanize.recursiveIteration
 
 import spock.lang.Specification
 
+import java.util.function.Function
 import java.util.function.Predicate
 
 /**
@@ -48,7 +49,7 @@ class recursiveIterationTest extends Specification {
         []            ||  []
     }
 
-    def "#reject returns an array conRtaining only the non-matching items"(int[] input, List<Integer> result) {
+    def "#reject returns an array containing only the non-matching items"(int[] input, List<Integer> result) {
         def fn = { x -> x >= 10 } as Predicate<Integer>;
 
         expect:
@@ -89,35 +90,39 @@ class recursiveIterationTest extends Specification {
         [5, 10, 15]   ||  true
         []            ||  false
     }
+
+    def "#none returns true if 0 items in the array match"(int[] input, Boolean result) {
+        def fn = { x -> x >= 10 } as Predicate<Integer>
+
+        expect:
+        new RecursiveIteration(input).none(fn) == result;
+
+        where:
+        input         ||  result
+        [1,2,3]       ||  true
+        [10, 20, 30]  ||  false
+        [5, 10, 15]   ||  false
+        []            ||  true
+    }
+
+    def "#map returns an array containing elements transformed by the function" (int[] input, List<Integer> result) {
+        def fn = { x -> x + 1 } as Function<Integer, Integer>;
+
+        expect:
+        new RecursiveIteration(input).map(fn) == result
+
+        where:
+        input             ||  result
+        [1]               ||  [2]
+        [1,2,3]           ||  [2,3,4]
+        [20,10,30]        ||  [21,11,31]
+        [5,10,15,2,-1,4]  ||  [6,11,16,3,0,5]
+        []                ||  []
+    }
 }
 
 
-//    describe("some", () => {
-//        it("returns true if at least one item in the array matches", () => {
-//            const fn = (val) => val >= 10;
-//
-//            expect(lib.some([1,2,3], fn)).to.deep.equal(false)
-//            expect(lib.some([10,20,30], fn)).to.deep.equal(true)
-//            expect(lib.some([5, 10, 15], fn)).to.deep.equal(true)
-//            expect(lib.some([], fn)).to.deep.equal(false)
-//        })
-//
-//        it("does not use loops", checkForLoops('some'))
-//    })
-//
-//    describe("none", () => {
-//        it("returns true if 0 items in the array match", () => {
-//            const fn = (val) => val >= 10;
-//
-//            expect(lib.none([1,2,3], fn)).to.deep.equal(true)
-//            expect(lib.none([10,20,30], fn)).to.deep.equal(false)
-//            expect(lib.none([5, 10, 15], fn)).to.deep.equal(false)
-//            expect(lib.none([], fn)).to.deep.equal(true)
-//        })
-//
-//        it("does not use loops", checkForLoops('none'))
-//    })
-//
+
 //    describe("map", () => {
 //        it("returns an array containing elements transformed by the function", () => {
 //            const fn = (x) => x + 1;

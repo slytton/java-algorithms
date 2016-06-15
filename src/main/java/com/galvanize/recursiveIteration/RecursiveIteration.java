@@ -1,7 +1,9 @@
 package com.galvanize.recursiveIteration;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -99,17 +101,40 @@ public class RecursiveIteration {
 
 //    **** #some() ****
     public Boolean some(Predicate<Integer> fn) {
-        if(this.arr.length == 0) return false;
         return some(0, fn);
     }
 
     public Boolean some(int index, Predicate<Integer> fn) {
         if(index < this.arr.length){
-            if(fn.test(this.arr[index])) return true;
-            return some(++index, fn);
-        }else{
-            return false;
+            return fn.test(this.arr[index]) || some(++index, fn);
         }
+        return false;
+    }
+
+//    **** #none ****
+    public Boolean none(Predicate<Integer> fn) {
+        return none(0, fn);
+    }
+
+    public Boolean none(int index, Predicate<Integer> fn) {
+        if(index < this.arr.length){
+            return ( !fn.test(this.arr[index]) && none(++index, fn) );
+        }
+        return true;
+    }
+
+//    **** #map ****
+    public List<Integer> map(Function<Integer, Integer> fn){
+        return map(0, fn);
+    }
+
+    public LinkedList<Integer> map(int index, Function<Integer, Integer> fn) {
+        if(index < this.arr.length){
+            LinkedList<Integer> list = map((index + 1), fn);
+            list.addFirst(fn.apply(this.arr[index]));
+            return list;
+        }
+        return new LinkedList<>();
     }
 }
 

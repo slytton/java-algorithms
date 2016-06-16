@@ -1,7 +1,6 @@
 package com.galvanize.recursiveIteration;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -10,51 +9,56 @@ import java.util.function.Predicate;
  * Created by gschool on 6/14/16.
  */
 
-public class RecursiveIteration {
-    private int[] arr;
-    public RecursiveIteration(int[] arr){
+@FunctionalInterface
+interface  Reducable<Prev, Current>{
+    public Prev apply(Prev prev, Current current);
+}
+
+public class RecursiveIteration <T extends Comparable<T> & Appendable> {
+    private T[] arr;
+    public RecursiveIteration(T[] arr){
         this.arr = arr;
     }
 
 //    **** #max() ****
-    public Integer max(){
+    public T max(){
         if(this.arr.length == 0) return null;
         return max(0);
     }
 
-    public Integer max(Integer index){
+    public T max(Integer index){
         if(index < this.arr.length - 1){
-            int value = this.arr[index];
-            int max = max(++index);
-            return ( max >= value ) ? max : value;
+            T value = this.arr[index];
+            T max = max(++index);
+            return ( max.compareTo(value) >= 0 ) ? max : value;
         }else{
             return this.arr[index];
         }
     }
 
 //    **** #min() ****
-    public Integer min(){
+    public T min(){
         if(this.arr.length == 0) return null;
         return min(0);
     }
 
-    public Integer min(Integer index) {
+    public T min(Integer index) {
         if (index < this.arr.length - 1) {
-            int value = this.arr[index];
-            int min = min(++index);
-            return (min < value) ? min : value;
+            T value = this.arr[index];
+            T min = min(++index);
+            return (min.compareTo(value) < 0) ? min : value;
         }else{
             return this.arr[index];
         }
     }
 
 //    **** #filter() ****
-    public List<Integer> filter(Predicate<Integer> fn){
-        List<Integer> filtered = new ArrayList<Integer>();
+    public List<T> filter(Predicate<T> fn){
+        List<T> filtered = new ArrayList<T>();
         return filter(0, filtered, fn);
     }
 
-    public List<Integer> filter(Integer index, List<Integer> filtered, Predicate<Integer> fn) {
+    public List<T> filter(Integer index, List<T> filtered, Predicate<T> fn) {
         if (index < this.arr.length) {
             if(fn.test(this.arr[index])){
                 filtered.add(this.arr[index]);
@@ -66,13 +70,13 @@ public class RecursiveIteration {
     }
 
 //    **** #reject() ****
-    public List<Integer> reject(Predicate<Integer> fn){
-        return reject(0, new ArrayList<Integer>(), fn);
+    public List<T> reject(Predicate<T> fn){
+        return reject(0, new ArrayList<>(), fn);
     }
 
-    public List<Integer> reject(Integer index, List<Integer> rejected, Predicate<Integer> fn){
+    public List<T> reject(Integer index, List<T> rejected, Predicate<T> fn){
         if(index < this.arr.length) {
-            int val = this.arr[index];
+            T val = this.arr[index];
             if(!fn.test(val)) {
                 rejected.add(val);
             }
@@ -84,12 +88,12 @@ public class RecursiveIteration {
 
 
 //    **** #every() ****
-    public Boolean every(Predicate<Integer> fn){
+    public Boolean every(Predicate<T> fn){
         if(this.arr.length == 0) return true;
         return every(0, fn);
     }
 
-    public Boolean every(int index, Predicate<Integer> fn){
+    public Boolean every(int index, Predicate<T> fn){
         if(index < this.arr.length){
             if(!fn.test(this.arr[index])) return false;
             return every(++index, fn);
@@ -100,41 +104,92 @@ public class RecursiveIteration {
 
 
 //    **** #some() ****
-    public Boolean some(Predicate<Integer> fn) {
+    public Boolean some(Predicate<T> fn) {
         return some(0, fn);
     }
 
-    public Boolean some(int index, Predicate<Integer> fn) {
+    public Boolean some(int index, Predicate<T> fn) {
         if(index < this.arr.length){
             return fn.test(this.arr[index]) || some(++index, fn);
         }
         return false;
     }
 
+
 //    **** #none ****
-    public Boolean none(Predicate<Integer> fn) {
+    public Boolean none(Predicate<T> fn) {
         return none(0, fn);
     }
 
-    public Boolean none(int index, Predicate<Integer> fn) {
+    public Boolean none(int index, Predicate<T> fn) {
         if(index < this.arr.length){
             return ( !fn.test(this.arr[index]) && none(++index, fn) );
         }
         return true;
     }
 
+
 //    **** #map ****
-    public List<Integer> map(Function<Integer, Integer> fn){
-        return map(0, fn);
+    public ArrayList<T> map(Function<T, T> fn){
+        return map(0, new ArrayList<T>(), fn);
     }
 
-    public LinkedList<Integer> map(int index, Function<Integer, Integer> fn) {
+    public ArrayList<T> map(int index, ArrayList<T> list, Function<T, T> fn) {
         if(index < this.arr.length){
-            LinkedList<Integer> list = map((index + 1), fn);
-            list.addFirst(fn.apply(this.arr[index]));
+            list.add(fn.apply(this.arr[index]));
+            list = map((index + 1), list, fn);
             return list;
         }
-        return new LinkedList<>();
+        return list;
+    }
+
+
+//    **** #join ***
+    public String join(String delim) {
+        if(this.arr.length == 0) return "";
+        return join(0, delim);
+    }
+
+    private String join(int index, String delim) {
+        if(index < this.arr.length - 1){
+            return this.arr[index].toString() + delim + join(++index, delim);
+        }
+        return this.arr[index].toString();
+    }
+
+//    **** #split ****
+    public static ArrayList<String> split(String toSplit, String delim){
+        return split(0, new ArrayList<>(), 0, toSplit, delim);
+    }
+
+    private static ArrayList<String> split(int index, ArrayList<String> list, int arrIndex, String toSplit, String delim){
+        if (index < toSplit.length()){
+            String character  = "" + toSplit.charAt(index);
+            if (!character.equals(delim)){
+                try {
+                    list.add(character + list.get(arrIndex));
+                } catch (Exception e){
+                    list.add(character);
+                }
+            }else{
+                arrIndex++;
+            }
+            split(++index, list, arrIndex, toSplit, delim);
+        }
+        return list;
+    }
+
+//    **** #reduce ****
+    public T reduce(Reducable<T, T> fn, T start) {
+        return reduce(0, fn , start);
+    }
+
+    public T reduce(int index, Reducable<T, T> fn, T start){
+        if(index < this.arr.length){
+            start = reduce(index + 1, fn, fn.apply(start, this.arr[index]));
+        }
+
+        return start;
     }
 }
 

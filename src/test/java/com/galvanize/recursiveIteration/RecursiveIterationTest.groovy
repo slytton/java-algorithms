@@ -35,7 +35,7 @@ class recursiveIterationTest extends Specification {
         []                ||  null
     }
 
-    def "#filter returns an array that contains only matching items"(int[] input, List<Integer> result) {
+    def "#filter returns an array that contains only matching items"(Integer[] input, List<Integer> result) {
         def fn = { x -> x >= 10 } as Predicate<Integer>;
 
         expect:
@@ -49,7 +49,7 @@ class recursiveIterationTest extends Specification {
         []            ||  []
     }
 
-    def "#reject returns an array containing only the non-matching items"(int[] input, List<Integer> result) {
+    def "#reject returns an array containing only the non-matching items"(Integer[] input, List<Integer> result) {
         def fn = { x -> x >= 10 } as Predicate<Integer>;
 
         expect:
@@ -63,7 +63,7 @@ class recursiveIterationTest extends Specification {
         []            ||  []
     }
 
-    def "#every returns true if every item in the array matches" (int[] input, Boolean result) {
+    def "#every returns true if every item in the array matches" (Integer[] input, Boolean result) {
         def fn = { x -> x >= 10 } as Predicate<Integer>
 
         expect:
@@ -77,7 +77,7 @@ class recursiveIterationTest extends Specification {
         []            ||  true
     }
 
-    def "#some returns true if at least one item in the array matches" (int[] input, Boolean result) {
+    def "#some returns true if at least one item in the array matches" (Integer[] input, Boolean result) {
         def fn = { x -> x >= 10 } as Predicate<Integer>
 
         expect:
@@ -91,7 +91,7 @@ class recursiveIterationTest extends Specification {
         []            ||  false
     }
 
-    def "#none returns true if 0 items in the array match"(int[] input, Boolean result) {
+    def "#none returns true if 0 items in the array match"(Integer[] input, Boolean result) {
         def fn = { x -> x >= 10 } as Predicate<Integer>
 
         expect:
@@ -105,7 +105,7 @@ class recursiveIterationTest extends Specification {
         []            ||  true
     }
 
-    def "#map returns an array containing elements transformed by the function" (int[] input, List<Integer> result) {
+    def "#map returns an array containing elements transformed by the function" (Integer[] input, List<Integer> result) {
         def fn = { x -> x + 1 } as Function<Integer, Integer>;
 
         expect:
@@ -119,46 +119,58 @@ class recursiveIterationTest extends Specification {
         [5,10,15,2,-1,4]  ||  [6,11,16,3,0,5]
         []                ||  []
     }
+
+    def "#join returns a string with the elements of the array joined by the delimiter when called with strings" (String[] input, String delim, result) {
+        expect:
+        new RecursiveIteration(input).join(delim) == result
+
+        where:
+        input            |  delim  ||  result
+        []               |  "."    ||  ""
+        ["a"]            |  "."    ||  "a"
+        ["a", "b"]       |  ","    ||  "a,b"
+        ["a", "b", "c"]  |  "|"    ||  "a|b|c"
+    }
+
+    def "#join returns a string with the elements of the arry joined by the delimeter when called with integers" (Integer[] input, String delim, result) {
+        expect:
+        new RecursiveIteration(input).join(delim) == result
+
+        where:
+        input    |  delim  ||  result
+        []       |  ","    ||  ""
+        [1]      |  ","    ||  "1"
+        [1,2]    |  ","    ||  "1,2"
+        [1,2,3]  |  "|"    ||  "1|2|3"
+    }
+
+    def "#split returns an array of strings split on the delimiter" (String input, String delim, ArrayList<String> result) {
+        expect:
+        RecursiveIteration.split(input, delim).equals(result);
+
+        where:
+        input  |  delim  ||  result
+        ""     |  "."    ||  []
+        "a"    |  "."    ||  ["a"]
+        "a.b"  |  "."    ||  ["a", "b"]
+    }
+
+    def "#reduce returns the reduced value" (Integer[] input, Integer start, Integer result){
+        def fn = {previous, current -> previous + current} as Reducable<Integer, Integer>
+
+        expect:
+        new RecursiveIteration(input).reduce(fn, start) == result
+
+        where:
+        input       |  start  ||  result
+        []          |  5     ||  5
+        [1]         |  5     ||  6
+        [1,2]       |  5     ||  8
+        [1,2,4]     |  5     ||  12
+        [1,2,4,10]  |  5     ||  22
+    }
 }
 
-
-
-//    describe("map", () => {
-//        it("returns an array containing elements transformed by the function", () => {
-//            const fn = (x) => x + 1;
-//
-//            expect(lib.map([1], fn)).to.deep.equal([2])
-//            expect(lib.map([1,2,3], fn)).to.deep.equal([2,3,4])
-//            expect(lib.map([20, 10 ,30], fn)).to.deep.equal([21,11,31])
-//            expect(lib.map([5, 10, 15, 2, -1, 4], fn)).to.deep.equal([6,11,16,3,0,5])
-//            expect(lib.map([], fn)).to.deep.equal([])
-//        })
-//
-//        it("does not use loops", checkForLoops('map'))
-//    })
-//
-//    describe("join", () => {
-//        it("returns a string with the elements of the array joined by the delimiter", () => {
-//            expect(lib.join([], ",")).to.eq("")
-//            expect(lib.join(["a"], ",")).to.eq("a")
-//            expect(lib.join(["a", "b"], ",")).to.eq("a,b")
-//            expect(lib.join(["a", "b", "c"], "|")).to.eq("a|b|c")
-//            expect(lib.join([1,2,3], "|")).to.eq("1|2|3")
-//        })
-//
-//        it("does not use loops", checkForLoops('join'))
-//    })
-//
-//    describe("split", () => {
-//        it("returns an array of strings split on the delimiter", () => {
-//            expect(lib.split("", '.')).to.deep.equal([])
-//            expect(lib.split("a", '.')).to.deep.equal(['a'])
-//            expect(lib.split("a.b", '.')).to.deep.equal(['a', 'b'])
-//        })
-//
-//        it("does not use loops", checkForLoops('split'))
-//    })
-//
 //    describe("reduce", () => {
 //        it("returns the reduced value", () => {
 //            const fn = (previous, current) => previous + current;

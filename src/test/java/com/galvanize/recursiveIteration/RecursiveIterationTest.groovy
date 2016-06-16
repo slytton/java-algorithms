@@ -182,19 +182,23 @@ class recursiveIterationTest extends Specification {
         [1,2,3]  |  4       ||  -1
 
     }
+
+    def "#leftPad returns a string padded by the given delimeter, the given number of times" (String input, int times, String delim, String result){
+        expect:
+        RecursiveIteration.leftPad(input, times, delim).equals(result);
+
+        where:
+        input    |  times  |  delim  ||  result
+        ""       |  5      |  "-"    ||  "-----"
+        "a"      |  4      |  "|"    ||  "|||a"
+        "ab"     |  4      |  "|"    ||  "||ab"
+        "abc"    |  4      |  "|"    ||  "|abc"
+        "abcd"   |  4      |  "|"    ||  "abcd"
+        "abcde"  |  4      |  "|"    ||  "abcde"
+
+    }
 }
 
-//    describe("indexOf", () => {
-//        it("returns the index of the given value", () => {
-//            expect(lib.indexOf([1,2,3], 1)).to.equal(0)
-//            expect(lib.indexOf([1,2,3], 2)).to.equal(1)
-//            expect(lib.indexOf([1,2,3], 3)).to.equal(2)
-//            expect(lib.indexOf([1,2,3], 4)).to.equal(-1)
-//        })
-//
-//        it("does not use loops", checkForLoops('indexOf'))
-//    })
-//
 //    describe("leftPad", () => {
 //        it("returns a string padded by the given delimiter, the given number of times", () => {
 //            expect(lib.leftPad('',      5, '-')).to.eq("-----")

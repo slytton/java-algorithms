@@ -201,6 +201,17 @@ public class RecursiveIteration <T extends Comparable<T> & Appendable> {
         if(index < this.arr.length) return this.arr[index] == item ? index : indexOf(index + 1, item);
         return -1;
     }
+
+
+//    **** #leftPad ****
+    public static String leftPad(String input, int times, String delim){
+        return leftPad(0, input, times, delim);
+    }
+
+    public static String leftPad(int index, String input, int times, String delim){
+        System.out.println(index);
+        return (index < (times - input.length())) ? delim + leftPad(index + 1, input, times, delim) : input;
+    }
 }
 
 

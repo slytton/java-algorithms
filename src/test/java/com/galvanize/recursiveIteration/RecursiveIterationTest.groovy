@@ -169,22 +169,21 @@ class recursiveIterationTest extends Specification {
         [1,2,4]     |  5     ||  12
         [1,2,4,10]  |  5     ||  22
     }
+
+    def "#indexOf returns the index of the given value" (Integer[] input, Integer toFind, int result) {
+        expect:
+        new RecursiveIteration(input).indexOf(toFind) == result
+
+        where:
+        input    |  toFind  ||  result
+        [1,2,3]  |  1       ||  0
+        [1,2,3]  |  2       ||  1
+        [1,2,3]  |  3       ||  2
+        [1,2,3]  |  4       ||  -1
+
+    }
 }
 
-//    describe("reduce", () => {
-//        it("returns the reduced value", () => {
-//            const fn = (previous, current) => previous + current;
-//
-//            expect(lib.reduce([], fn, 5)).to.deep.equal(5)
-//            expect(lib.reduce([1], fn, 5)).to.deep.equal(6)
-//            expect(lib.reduce([1,2], fn, 5)).to.deep.equal(8)
-//            expect(lib.reduce([1,2,4], fn, 5)).to.deep.equal(12)
-//            expect(lib.reduce([1,2,4,10], fn, 5)).to.deep.equal(22)
-//        })
-//
-//        it("does not use loops", checkForLoops('reduce'))
-//    })
-//
 //    describe("indexOf", () => {
 //        it("returns the index of the given value", () => {
 //            expect(lib.indexOf([1,2,3], 1)).to.equal(0)

@@ -184,12 +184,22 @@ public class RecursiveIteration <T extends Comparable<T> & Appendable> {
         return reduce(0, fn , start);
     }
 
-    public T reduce(int index, Reducable<T, T> fn, T start){
+    private T reduce(int index, Reducable<T, T> fn, T start){
         if(index < this.arr.length){
             start = reduce(index + 1, fn, fn.apply(start, this.arr[index]));
         }
 
         return start;
+    }
+
+//    **** #indexOf ****
+    public int indexOf(T item) {
+        return indexOf(0, item);
+    }
+
+    private int indexOf(int index, T item) {
+        if(index < this.arr.length) return this.arr[index] == item ? index : indexOf(index + 1, item);
+        return -1;
     }
 }
 

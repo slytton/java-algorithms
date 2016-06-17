@@ -4,7 +4,6 @@ import spock.lang.Specification
 
 import java.util.function.Function
 import java.util.function.Predicate
-
 /**
  * Created by gschool on 6/14/16.
  */
@@ -197,31 +196,19 @@ class recursiveIterationTest extends Specification {
         "abcde"  |  4      |  "|"    ||  "abcde"
 
     }
-}
 
-//    describe("leftPad", () => {
-//        it("returns a string padded by the given delimiter, the given number of times", () => {
-//            expect(lib.leftPad('',      5, '-')).to.eq("-----")
-//            expect(lib.leftPad('a',     4, '|')).to.eq("|||a")
-//            expect(lib.leftPad('ab',    4, '|')).to.eq("||ab")
-//            expect(lib.leftPad('abc',   4, '|')).to.eq("|abc")
-//            expect(lib.leftPad('abcd',  4, '|')).to.eq("abcd")
-//            expect(lib.leftPad('abcde', 4, '|')).to.eq("abcde")
-//        })
-//
-//        it("does not use loops", checkForLoops('leftPad'))
-//    })
-//
-//    describe("flatten", () => {
-//        it("returns a single-dimensional array of all of the values", () => {
-//            expect(lib.flatten([])).to.deep.equal([])
-//            expect(lib.flatten([1])).to.deep.equal([1])
-//            expect(lib.flatten([[1]])).to.deep.equal([1])
-//            expect(lib.flatten([[[1]]])).to.deep.equal([1])
-//            expect(lib.flatten([[[[1]]]])).to.deep.equal([1])
-//            expect(lib.flatten([1, [2], [3,4], [ 5, [6, [7]]]])).to.deep.equal([1, 2, 3, 4, 5, 6, 7])
-//        })
-//
-//        it("does not use loops", checkForLoops('flatten'))
-//    })
-//})
+    def "#flatten returns a single-dimensional array of all of the values" (Object input, ArrayList<?>result) {
+        expect:
+        RecursiveIteration.flatten(input).equals(result);
+
+        where:
+        input                            ||  result
+        []                               ||  []
+        [1]                              ||  [1]
+        [[1]]                            ||  [1]
+        [[[1]]]                          ||  [1]
+        [[[[1]]]]                        ||  [1]
+        [[[[[1]]]]]                      ||  [1]
+        [1, [2], [3,4], [ 5, [6, [7]]]]  ||  [1,2,3,4,5,6,7]
+    }
+}

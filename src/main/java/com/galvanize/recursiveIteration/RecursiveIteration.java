@@ -209,10 +209,22 @@ public class RecursiveIteration <T extends Comparable<T> & Appendable> {
     }
 
     public static String leftPad(int index, String input, int times, String delim){
-        System.out.println(index);
         return (index < (times - input.length())) ? delim + leftPad(index + 1, input, times, delim) : input;
     }
+
+//    **** Flatten ****
+    public static ArrayList<Integer> flatten(Object array){
+        if(array.getClass().getName().equals("java.lang.Integer")){
+            ArrayList<Integer> list = new ArrayList<>();
+            list.add(((Integer)array));
+            return list;
+        } else {
+            ArrayList<Integer> result = new ArrayList<>();
+            ArrayList<Integer> castArray = ((ArrayList<Integer>)array);
+            for(int i = 0; i < castArray.size(); i++) {
+                result.addAll(flatten(castArray.get(i)));
+            }
+            return result;
+        }
+    }
 }
-
-
-

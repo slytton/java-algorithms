@@ -1,6 +1,7 @@
 package com.galvanize.recursiveIteration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -215,16 +216,16 @@ public class RecursiveIteration <T extends Comparable<T> & Appendable> {
 //    **** Flatten ****
     public static ArrayList<Integer> flatten(Object array){
         if(array.getClass().getName().equals("java.lang.Integer")){
-            ArrayList<Integer> list = new ArrayList<>();
-            list.add(((Integer)array));
-            return list;
+            return new ArrayList<>(Collections.singletonList(((Integer) array)));
         } else {
-            ArrayList<Integer> result = new ArrayList<>();
-            ArrayList<Integer> castArray = ((ArrayList<Integer>)array);
-            for(int i = 0; i < castArray.size(); i++) {
-                result.addAll(flatten(castArray.get(i)));
-            }
-            return result;
+            return flattenChildren(((ArrayList<Integer>) array), 0);
         }
+    }
+
+    private static ArrayList<Integer>flattenChildren(ArrayList<Integer> array, int index){
+        if(index == array.size()) return new ArrayList<>();
+        ArrayList<Integer> list = flatten(array.get(index));
+        list.addAll(flattenChildren(array, index + 1));
+        return list;
     }
 }

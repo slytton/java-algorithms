@@ -153,12 +153,12 @@ class BinaryTreeTest extends Specification {
         binTree = new BinaryTree();
         [7,3,9,1,99,44,66].forEach({value -> binTree.insertRecursively(value)});
         def largeBinTree = new BinaryTree();
-        [5,3,1,2,10,9,11].forEach({value -> largeBinTree.insertRecursively(value)});
+        [5,3,1,2,10,9,11,15,14].forEach({value -> largeBinTree.insertRecursively(value)});
 
 
         expect:
         binTree.breadthFirstSearch().equals([7,3,9,1,99,44,66])
-        largeBinTree.breadthFirstSearch().equals([5,3,10,1,2,9,11])
+        largeBinTree.breadthFirstSearch().equals([5,3,10,1,2,9,11,15,14])
     }
 
     def "#depthFirstSearch - preorder"() {
@@ -166,8 +166,7 @@ class BinaryTreeTest extends Specification {
         [7,3,9,1,99,44,66].forEach({value -> binTree.insertRecursively(value)});
 
         expect:
-        Arrays.equals(binTree.DFSPreOrder(), [7, 3, 1, 9, 99, 44, 66]);
-
+        binTree.DFSPreOrder().equals([7, 3, 1, 9, 99, 44, 66]);
     }
 
     def "#depthFirstSearch - inOrder"() {
@@ -175,8 +174,7 @@ class BinaryTreeTest extends Specification {
         [7,3,9,1,99,44,66].forEach({value -> binTree.insertRecursively(value)});
 
         expect:
-        Arrays.equals(binTree.DFSInOrder(), [1, 3, 7, 9, 44, 66, 99]);
-
+        binTree.DFSInOrder().equals([1, 3, 7, 9, 44, 66, 99]);
     }
 
     def "#depthFirstSearch - postOrder"() {
@@ -184,19 +182,11 @@ class BinaryTreeTest extends Specification {
         [7,3,9,1,99,44,66].forEach({value -> binTree.insertRecursively(value)});
 
         expect:
-        Arrays.equals(binTree.DFSPostOrder(), [1, 3, 66, 44, 99, 9, 7]);
-
+        binTree.DFSPostOrder().equals([1, 3, 66, 44, 99, 9, 7]);
     }
-
 }
 
 
-//        describe("postorder", function(){
-//        it("searches from left - right - root", function(){
-//        expect(binTree.DFSPostOrder()).to.deep.eq([1, 3, 66, 44, 99, 9, 7]);
-//        });
-//        });
-//        });
 //        describe("#findLowest", function(){
 //        it("It should", function(){
 //        binTree = new data.BinTree();

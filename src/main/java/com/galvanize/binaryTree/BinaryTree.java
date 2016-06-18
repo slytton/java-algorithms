@@ -17,7 +17,7 @@ public class BinaryTree {
     }
 
 
-
+//    **** #insertRecursively ****
     public boolean insertRecursively(int value) {
         if(this.root == null) this.root = new Node(value);
 
@@ -37,6 +37,8 @@ public class BinaryTree {
         return false;
     }
 
+
+//    **** #insertIteratively ****
     public boolean insertIteratively(int value){
         if(this.root == null){
             this.root = new Node(value);
@@ -64,6 +66,8 @@ public class BinaryTree {
         }
     }
 
+
+//    **** #containsIteratively ****
     public boolean containsIteratively(int value) {
         Node current = this.root;
         while(true){
@@ -74,6 +78,7 @@ public class BinaryTree {
         }
     }
 
+//    **** #containsRecursively ****
     public boolean containsRecursively(int value) {
         return containsRecursively(value, this.root);
     }
@@ -87,9 +92,9 @@ public class BinaryTree {
     }
 
 
+//    **** #breadthFirstSearch ****
     public ArrayList<Integer> breadthFirstSearch(){
         ArrayList<Integer> list = new ArrayList<>();
-        if(this.root == null) return list;
         list.add(this.root.getValue());
         list.addAll(breadthFirstSearch(this.root));
         return list;
@@ -113,6 +118,49 @@ public class BinaryTree {
     }
 
 
+//    **** #DFSPreOrder ****
+    public ArrayList<Integer> DFSPreOrder() {
+        ArrayList<Integer> list = new ArrayList<>();
+        DFSPreOrder(this.root, list);
+        return list;
+    }
 
+    private void DFSPreOrder(Node current, ArrayList<Integer> list){
+        if(current == null) return ;
+
+        list.add(current.getValue());
+        DFSPreOrder(current.getLeft(), list);
+        DFSPreOrder(current.getRight(), list);
+    }
+
+
+//    **** DFSInOrder() ****
+    public ArrayList<Integer> DFSInOrder(){
+        return DFSInOrder(this.root);
+    }
+
+    private ArrayList<Integer> DFSInOrder(Node current){
+        if(current == null) return new ArrayList<>();
+
+        ArrayList<Integer> list = DFSInOrder(current.getLeft());
+        list.add(current.getValue());
+        list.addAll(DFSInOrder(current.getRight()));
+        return list;
+    }
+
+//    **** DFSPostOrder() ****
+    public ArrayList<Integer> DFSPostOrder(){
+        return DFSPostOrder(this.root);
+    }
+
+    private ArrayList<Integer> DFSPostOrder(Node current){
+        if(current == null) return new ArrayList<>();
+
+        ArrayList<Integer> list = DFSPostOrder(current.getLeft());
+        list.addAll(DFSPostOrder(current.getRight()));
+        list.add(current.getValue());
+
+        return list;
+    }
 
 }

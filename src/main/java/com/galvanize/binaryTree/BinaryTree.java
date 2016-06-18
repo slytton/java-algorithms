@@ -89,21 +89,25 @@ public class BinaryTree {
 
     public ArrayList<Integer> breadthFirstSearch(){
         ArrayList<Integer> list = new ArrayList<>();
+        if(this.root == null) return list;
         list.add(this.root.getValue());
-        if(this.root == null) ;
-        return breadthFirstSearch(this.root, list);
+        list.addAll(breadthFirstSearch(this.root));
+        return list;
     }
 
-    private ArrayList<Integer> breadthFirstSearch(Node current, ArrayList<Integer> list){
-        if(current == null) return new ArrayList<>();
+    private ArrayList<Integer> breadthFirstSearch(Node current){
+        ArrayList<Integer> list = new ArrayList<>();
+
+        if(current == null) return list;
+
         Node left = current.getLeft();
         Node right = current.getRight();
 
         if(left != null) list.add(left.getValue());
         if(right != null) list.add(right.getValue());
 
-        breadthFirstSearch(left, list);
-        breadthFirstSearch(right, list);
+        list.addAll(breadthFirstSearch(left));
+        list.addAll(breadthFirstSearch(right));
 
         return list;
     }

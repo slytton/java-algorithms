@@ -163,4 +163,72 @@ public class BinaryTree {
         return list;
     }
 
+//    **** #findLowest ****
+    public int findLowest(){
+        return findLowest(this.root);
+    }
+
+    private int findLowest(Node current){
+        if(current.getLeft() == null) return current.getValue();
+        return findLowest(current.getLeft());
+    }
+
+//    **** #findHighest ****
+    public int findHighest(){
+        return findHighest(this.root);
+    }
+
+    private int findHighest(Node current){
+        if(current.getRight() == null) return current.getValue();
+        return findHighest(current.getRight());
+    }
+
+//    **** #size ****
+    public int size(){
+        return size(this.root);
+    }
+
+    private int size(Node current){
+        return (current == null) ? 0 : 1 + size(current.getLeft()) + size(current.getRight());
+    }
+
+//    **** #remove ****
+    public boolean remove(int toRemove){
+        return remove(toRemove, this.root, null);
+    }
+
+    public boolean remove(int toRemove, Node current, Node prev){
+        if(current == null) return false;
+
+        if(toRemove < current.getValue()) return remove(toRemove, current.getLeft(), current);
+        if(toRemove > current.getValue()) return remove(toRemove, current.getRight(), current);
+
+        if(current.getLeft() == null && current.getRight() == null){ // The node is a leaf
+            if(current == this.root) this.root = null;  // The node is the last node in the tree.
+            else setPrev(prev, current, null);
+        } else if(current.getRight() == null) { // The node to remove only has a child on left
+            setPrev(prev, current, current.getLeft());
+        } else if(current.getLeft() == null) { // The node to remove only has a child on the right
+            setPrev(prev, current, current.getRight());
+        } else { // The node to remove has children on both left and right.
+            // Get the smallest value from the large side relative to current.
+            int smallest = findLowest(current.getRight());
+            // Remove that value from tree.
+            remove(smallest);
+            // Replace removed node with the smallest value.
+            Node newCurrent = new Node(smallest);
+            newCurrent.setLeft(current.getLeft());
+            newCurrent.setRight(current.getRight());
+            setPrev(prev, current, newCurrent);
+        }
+        return true;
+    }
+
+    private void setPrev(Node prev, Node toReplace, Node setTo){
+        if(prev == null){
+            this.root = setTo;
+        }else if(prev.getLeft().getValue() == toReplace.getValue()) prev.setLeft(setTo);
+        else prev.setRight(setTo);
+    }
+
 }

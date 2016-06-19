@@ -20,20 +20,16 @@ public class BinaryTree {
 //    **** #insertRecursively ****
     public boolean insertRecursively(int value) {
         if(this.root == null) this.root = new Node(value);
-
         return insertRecursively(value, this.root);
     }
 
     private boolean insertRecursively(int value, Node location){
-
         if(value > location.getValue()){
-            return (location.getRight() == null) ? location.setRight(new Node(value)) : insertRecursively(value, location.getRight());
+            return (location.getRight() == null) ? location.setRight(new Node(value, location)) : insertRecursively(value, location.getRight());
         }
-
         if(value < location.getValue()){
-            return (location.getLeft() == null) ? location.setLeft(new Node(value)) : insertRecursively(value, location.getLeft());
+            return (location.getLeft() == null) ? location.setLeft(new Node(value, location)) : insertRecursively(value, location.getLeft());
         }
-
         return false;
     }
 
@@ -46,20 +42,23 @@ public class BinaryTree {
         }
 
         Node current = this.root;
+        Node prev = null;
         while(true){
             if(current.getValue() == value) return false;
             else if(value > current.getValue()){
                 if(current.getRight() == null){
-                    current.setRight(new Node(value));
+                    current.setRight(new Node(value, prev));
                     return true;
                 }else{
+                    prev = current;
                     current = current.getRight();
                 }
             }else{
                 if(current.getLeft() == null){
-                    current.setLeft(new Node(value));
+                    current.setLeft(new Node(value, prev));
                     return true;
                 }else{
+                    prev = current;
                     current = current.getLeft();
                 }
             }
@@ -88,9 +87,7 @@ public class BinaryTree {
         return (value == current.getValue()) || ((value > current.getValue())
                                                     ? containsRecursively(value, current.getRight())
                                                     : containsRecursively(value, current.getLeft()));
-
     }
-
 
 //    **** #breadthFirstSearch ****
     public ArrayList<Integer> breadthFirstSearch(){
@@ -194,37 +191,38 @@ public class BinaryTree {
 
 //    **** #remove ****
     public boolean remove(int toRemove){
-        return remove(toRemove, this.root, null);
+        return remove(toRemove, this.root);
     }
 
-    public boolean remove(int toRemove, Node current, Node prev){
+    public boolean remove(int toRemove, Node current){
         if(current == null) return false;
 
-        if(toRemove < current.getValue()) return remove(toRemove, current.getLeft(), current);
-        if(toRemove > current.getValue()) return remove(toRemove, current.getRight(), current);
+        if(toRemove < current.getValue()) return remove(toRemove, current.getLeft());
+        if(toRemove > current.getValue()) return remove(toRemove, current.getRight());
 
         if(current.getLeft() == null && current.getRight() == null){ // The node is a leaf
             if(current == this.root) this.root = null;  // The node is the last node in the tree.
-            else setPrev(prev, current, null);
+            else setPrev(current, null);
         } else if(current.getRight() == null) { // The node to remove only has a child on left
-            setPrev(prev, current, current.getLeft());
+            setPrev(current, current.getLeft());
         } else if(current.getLeft() == null) { // The node to remove only has a child on the right
-            setPrev(prev, current, current.getRight());
+            setPrev(current, current.getRight());
         } else { // The node to remove has children on both left and right.
             // Get the smallest value from the large side relative to current.
             int smallest = findLowest(current.getRight());
             // Remove that value from tree.
             remove(smallest);
             // Replace removed node with the smallest value.
-            Node newCurrent = new Node(smallest);
+            Node newCurrent = new Node(smallest, current.getParent());
             newCurrent.setLeft(current.getLeft());
             newCurrent.setRight(current.getRight());
-            setPrev(prev, current, newCurrent);
+            setPrev(current, newCurrent);
         }
         return true;
     }
 
-    private void setPrev(Node prev, Node toReplace, Node setTo){
+    private void setPrev(Node toReplace, Node setTo){
+        Node prev = toReplace.getParent();
         if(prev == null){
             this.root = setTo;
         }else if(prev.getLeft().getValue() == toReplace.getValue()) prev.setLeft(setTo);

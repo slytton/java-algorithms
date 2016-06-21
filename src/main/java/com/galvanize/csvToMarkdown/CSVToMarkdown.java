@@ -46,8 +46,6 @@ public class CSVToMarkdown {
             }
         }
 
-        logger.debug(Arrays.toString(largests));
-
         return largests;
     }
 

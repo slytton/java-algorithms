@@ -42,7 +42,6 @@ public class MazeSolvability {
     }
 
     public boolean isSolvable(){
-        System.out.println("\n\n**** Checking solvability");
         return isSolvable(this.start);
     }
 

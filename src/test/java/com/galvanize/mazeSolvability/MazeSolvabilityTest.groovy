@@ -36,7 +36,6 @@ class MazeSolvabilityTest extends Specification {
         ! new MazeSolvability(maze1).getStart().getForward().getForward().isEnd();
         new MazeSolvability(maze2).getStart().getForward().getRight().getForward().getRight().getForward().isEnd();
         new MazeSolvability(maze3).getStart().getForward().getForward().getRight().getForward().isEnd();
-        println "\n\n\n *** Final maze"
         new MazeSolvability(maze4).getStart().getForward().getLeft().getForward().getLeft().getForward().isEnd();
 
     }

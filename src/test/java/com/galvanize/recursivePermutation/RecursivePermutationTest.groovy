@@ -10,10 +10,13 @@ class RecursivePermutationTest extends Specification {
         new RecursivePermutation(input).getPermutations().equals(result)
 
         where:
-        input  ||  result
-        ""     ||  []
-        "a"    ||  ["a"]
-        "ab"   ||  ["ab", "ba"]
-        "abc"  ||  ["abc", "acb", "bac", "bca", "cab", "cba"]
+        input   ||  result
+        ""      ||  []
+        "a"     ||  ["a"]
+        "ab"    ||  ["ab", "ba"]
+        "abc"   ||  ["abc", "acb", "bac", "bca", "cab", "cba"]
+        "abc"   ||  ["abc", "acb", "bac", "bca", "cab", "cba"]
+        "abcd"  ||  ["abcd", "abdc", "acbd", "acdb", "adbc", "adcb", "bacd", "badc", "bcad", "bcda", "bdac", "bdca", "cabd", "cadb", "cbad", "cbda", "cdab", "cdba", "dabc", "dacb", "dbac", "dbca", "dcab", "dcba"]
+
     }
 }
